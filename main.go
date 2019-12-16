@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+	"strconv"
+)
 
 // func main() {
 // fmt.Println("Test")
@@ -128,10 +132,74 @@ import "fmt"
 // 	return 0
 // }
 // Exercise 3
-func main() {
-	a := []string{"foo1", "Bar1", "foo2", "Bar2"}
+// func main() {
+// 	a := []string{"foo1", "Bar1", "foo2", "Bar2"}
 
-	for i, s := range a {
-		fmt.Println(i, s)
+// 	for i, s := range a {
+// 		fmt.Println(i, s)
+// 	}
+// }
+// -----------------------------------------------------------------------------------------------
+// Exercise 3
+// type Profile struct {
+// 	Nama   string `json:"nama"`
+// 	Tempat string `json:"alamat"`
+// 	Umur   string `json:"umur"`
+// }
+
+// func main() {
+// 	slice := []Profile{{"Dzakiy", "Jakarta", "26"}}
+// 	profile, err := json.Marshal(slice)
+
+// 	if err != nil {
+// 		fmt.Println("Error Marshalling Json " + err.Error())
+// 		return
+// 	}
+
+// 	fmt.Println(string(profile))
+// }
+
+// --------------------------------------------------------------------------------------------------
+
+func main() {
+
+	jsonStr := `[{
+	"id": "1",
+	"name": "user1"
+}, {
+	"id": "2",
+	"name": "user2"
+}, {
+	"id": "3",
+	"name": "user3"
+}]`
+
+	type Person struct {
+		id   string
+		name int
 	}
+	var people []Person
+
+	var personMap []map[string]interface{}
+
+	err := json.Unmarshal([]byte(jsonStr), &personMap)
+
+	if err != nil {
+		panic(err)
+	}
+
+	for _, personData := range personMap {
+
+		// convert map to array of Person struct
+		var p Person
+		p.id = fmt.Sprintf("", personData["id"])
+		p.name, _ = strconv.Atoi(fmt.Sprintf("", personData["name"]))
+		people = append(people, p)
+	}
+
+	fmt.Println("isSuccess:true")
+	for _, value := range personMap {
+		fmt.Println("id_", value["id"], "#", "name_", value["name"])
+	}
+
 }
